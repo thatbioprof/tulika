@@ -1,10 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "./components/ui/card";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Textarea } from "./components/ui/textarea";
 import { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar } from "./components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 export default function ThatBioProf() {
   const [date, setDate] = useState(new Date());
@@ -30,6 +30,7 @@ export default function ThatBioProf() {
           <TabsTrigger value="contact">Contact</TabsTrigger>
         </TabsList>
 
+        {/* Courses Tab */}
         <TabsContent value="courses">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             {['Biology', 'Chemistry', 'Physics', 'Maths', 'Economics'].map((subject) => (
@@ -43,6 +44,7 @@ export default function ThatBioProf() {
           </div>
         </TabsContent>
 
+        {/* Upload Tab */}
         <TabsContent value="upload">
           <div className="mt-4">
             <Input type="file" className="mb-2" />
@@ -50,6 +52,7 @@ export default function ThatBioProf() {
           </div>
         </TabsContent>
 
+        {/* Schedule Tab */}
         <TabsContent value="schedule">
           <div className="mt-4">
             <Calendar mode="single" selected={date} onSelect={setDate} />
@@ -57,6 +60,7 @@ export default function ThatBioProf() {
           </div>
         </TabsContent>
 
+        {/* Register Tab */}
         <TabsContent value="register">
           <form className="mt-4 space-y-2">
             <Input placeholder="Name" />
@@ -66,6 +70,7 @@ export default function ThatBioProf() {
           </form>
         </TabsContent>
 
+        {/* Admin Login Tab */}
         <TabsContent value="adminLogin">
           <form className="mt-4 space-y-2">
             <Input placeholder="Admin Email" />
@@ -74,6 +79,7 @@ export default function ThatBioProf() {
           </form>
         </TabsContent>
 
+        {/* Student Login Tab */}
         <TabsContent value="studentLogin">
           <form className="mt-4 space-y-2">
             <Input placeholder="Student Email" />
@@ -82,6 +88,7 @@ export default function ThatBioProf() {
           </form>
         </TabsContent>
 
+        {/* Contact Tab */}
         <TabsContent value="contact">
           <form className="mt-4 space-y-2">
             <Input placeholder="Your Email" />
