@@ -1,13 +1,78 @@
-import { Card, CardContent } from "./components/ui/card";
-import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
-import { Textarea } from "./components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Calendar } from "./components/ui/calendar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import axios from "axios";  // Import axios for HTTP requests
 
 export default function ThatBioProf() {
   const [date, setDate] = useState(new Date());
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState("");  // For tracking errors
+
+  // File upload handling with size limit and error handling
+  const handleFileUpload = (event) => {
+    const uploadedFile = event.target.files[0];
+    if (uploadedFile && uploadedFile.size > 10 * 1024 * 1024) { // Limit file size to 10MB
+      setError("File size exceeds the 10MB limit.");
+      return;
+    }
+    setFile(uploadedFile);
+  };
+
+  // Retry logic with axios for API calls
+  const fetchData = async (url, retries = 3, delay = 1000) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      if (retries > 0) {
+        console.log(`Retrying... (${retries} retries left)`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return fetchData(url, retries - 1, delay * 2);  // Exponential backoff
+      }
+      console.error('Failed to fetch data after retries:', error);
+      throw error;
+    }
+  };
+
+  const uploadFile = async () => {
+    if (!file) {
+      setError("No file selected.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 10000, // Timeout of 10 seconds
+      });
+      console.log("File uploaded successfully", response);
+    } catch (error) {
+      if (error.response) {
+        setError(`Upload failed: ${error.response.data.message}`);
+      } else if (error.request) {
+        setError("Network error, please try again.");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+    }
+  };
+
+  // Function to handle the book class action
+  const handleBookClass = () => {
+    if (!date) {
+      setError("Please select a valid date.");
+      return;
+    }
+    // Process the booking logic here (e.g., send to backend)
+    console.log("Class booked for", date);
+  };
 
   return (
     <div className="min-h-screen bg-pink-50 p-6 text-gray-800 font-sans">
@@ -18,6 +83,13 @@ export default function ThatBioProf() {
           Playful learning for GCSE, IGCSE, IB, NEET, AP, CBSE and more
         </p>
       </header>
+
+      {/* Displaying error messages */}
+      {error && (
+        <div className="text-red-600 text-center mb-4">
+          <p>{error}</p>
+        </div>
+      )}
 
       <Tabs defaultValue="courses" className="max-w-5xl mx-auto">
         <TabsList className="grid w-full grid-cols-7">
@@ -47,8 +119,8 @@ export default function ThatBioProf() {
         {/* Upload Tab */}
         <TabsContent value="upload">
           <div className="mt-4">
-            <Input type="file" className="mb-2" />
-            <Button>Upload File</Button>
+            <Input type="file" className="mb-2" onChange={handleFileUpload} />
+            <Button onClick={uploadFile}>Upload File</Button>
           </div>
         </TabsContent>
 
@@ -56,7 +128,7 @@ export default function ThatBioProf() {
         <TabsContent value="schedule">
           <div className="mt-4">
             <Calendar mode="single" selected={date} onSelect={setDate} />
-            <Button className="mt-4">Book Class</Button>
+            <Button className="mt-4" onClick={handleBookClass}>Book Class</Button>
           </div>
         </TabsContent>
 
@@ -106,3 +178,4 @@ export default function ThatBioProf() {
     </div>
   );
 }
+
