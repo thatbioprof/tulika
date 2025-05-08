@@ -1,0 +1,101 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+export default function ThatBioProf() {
+  const [date, setDate] = useState(new Date());
+
+  return (
+    <div className="min-h-screen bg-pink-50 p-6 text-gray-800 font-sans">
+      <header className="text-center mb-8">
+        <img src="/logo.png" alt="That Bio Prof Logo" className="mx-auto mb-4 w-24 h-24 rounded-full shadow-lg" />
+        <h1 className="text-4xl font-bold text-pink-600">That Bio Prof</h1>
+        <p className="text-lg text-gray-600 mt-2">
+          Playful learning for GCSE, IGCSE, IB, NEET, AP, CBSE and more
+        </p>
+      </header>
+
+      <Tabs defaultValue="courses" className="max-w-5xl mx-auto">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="courses">Courses</TabsTrigger>
+          <TabsTrigger value="upload">Upload</TabsTrigger>
+          <TabsTrigger value="schedule">Schedule</TabsTrigger>
+          <TabsTrigger value="register">Register</TabsTrigger>
+          <TabsTrigger value="adminLogin">Admin Login</TabsTrigger>
+          <TabsTrigger value="studentLogin">Student Login</TabsTrigger>
+          <TabsTrigger value="contact">Contact</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="courses">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {['Biology', 'Chemistry', 'Physics', 'Maths', 'Economics'].map((subject) => (
+              <Card key={subject} className="bg-white shadow-md rounded-2xl">
+                <CardContent className="p-4">
+                  <h2 className="text-xl font-semibold text-pink-500">{subject}</h2>
+                  <p className="text-sm text-gray-600">Available for all boards and levels.</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="upload">
+          <div className="mt-4">
+            <Input type="file" className="mb-2" />
+            <Button>Upload File</Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="schedule">
+          <div className="mt-4">
+            <Calendar mode="single" selected={date} onSelect={setDate} />
+            <Button className="mt-4">Book Class</Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="register">
+          <form className="mt-4 space-y-2">
+            <Input placeholder="Name" />
+            <Input placeholder="Email" />
+            <Input placeholder="Password" type="password" />
+            <Button>Register</Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="adminLogin">
+          <form className="mt-4 space-y-2">
+            <Input placeholder="Admin Email" />
+            <Input placeholder="Password" type="password" />
+            <Button>Login as Admin</Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="studentLogin">
+          <form className="mt-4 space-y-2">
+            <Input placeholder="Student Email" />
+            <Input placeholder="Password" type="password" />
+            <Button>Login as Student</Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="contact">
+          <form className="mt-4 space-y-2">
+            <Input placeholder="Your Email" />
+            <Textarea placeholder="Your Message" />
+            <Button>Send</Button>
+          </form>
+          <div className="mt-6">
+            <h2 className="text-lg font-bold text-pink-500">Teacher Details</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Dr. B. Prof, PhD in Biology, 10+ years of experience in international boards, passionate about making science fun and accessible!
+            </p>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
